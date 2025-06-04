@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Format Autonomous AI System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.2s ease-in-out;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-active { background-color: #28a745; }
+        .status-inactive { background-color: #dc3545; }
+        .status-warning { background-color: #ffc107; }
+        .upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #667eea;
+        }
+        .upload-area.dragover {
+            border-color: #667eea;
+            background-color: #f8f9fa;
+        }
+        .processing-spinner {
+            display: none;
+        }
+        .result-card {
+            display: none;
+        }
+        .log-entry {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            background-color: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 10px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark gradient-bg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-robot me-2"></i>
+                Multi-Format AI System
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="#dashboard">Dashboard</a>
+                <a class="nav-link" href="#processor">Processor</a>
+                <a class="nav-link" href="#analytics">Analytics</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">
+                        Autonomous AI Processing System
+                    </h1>
+                    <p class="lead mb-4">
+                        Advanced multi-agent system that processes emails, JSON, and PDFs with 
+                        intelligent classification, contextual decisioning, and automated actions.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <button class="btn btn-light btn-lg" onclick="scrollToProcessor()">
+                            <i class="fas fa-upload me-2"></i>Start Processing
+                        </button>
+                        <button class="btn btn-outline-light btn-lg" onclick="showSystemHealth()">
+                            <i class="fas fa-chart-line me-2"></i>View Analytics
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="card bg-white bg-opacity-10 text-white border-0">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-envelope fa-2x mb-2"></i>
+                                    <h5>Email Processing</h5>
+                                    <p class="small">Advanced tone analysis & escalation</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card bg-white bg-opacity-10 text-white border-0">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-code fa-2x mb-2"></i>
+                                    <h5>JSON Validation</h5>
+                                    <p class="small">Schema validation & anomaly detection</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card bg-white bg-opacity-10 text-white border-0">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-file-pdf fa-2x mb-2"></i>
+                                    <h5>PDF Analysis</h5>
+                                    <p class="small">Document parsing & compliance checking</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card bg-white bg-opacity-10 text-white border-0">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-cogs fa-2x mb-2"></i>
+                                    <h5>Auto Actions</h5>
+                                    <p class="small">Intelligent routing & escalation</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">System Dashboard</h2>
+            
+            <!-- System Health -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-heartbeat me-2"></i>System Health
+                            </h5>
+                            <button class="btn btn-sm btn-outline-primary" onclick="refreshHealth()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="healthStatus">
+                                <!-- Health status will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card card-hover text-center">
+                        <div class="card-body">
+                            <i class="fas fa-tasks fa-2x text-primary mb-3"></i>
+                            <h3 class="mb-1" id="totalSessions">0</h3>
+                            <p class="text-muted">Total Sessions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-hover text-center">
+                        <div class="card-body">
+                            <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
+                            <h3 class="mb-1" id="actionsExecuted">0</h3>
+                            <p class="text-muted">Actions Executed</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-hover text-center">
+                        <div class="card-body">
+                            <i class="fas fa-exclamation-triangle fa-2x text-warning mb-3"></i>
+                            <h3 class="mb-1" id="anomaliesDetected">0</h3>
+                            <p class="text-muted">Anomalies Detected</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-hover text-center">
+                        <div class="card-body">
+                            <i class="fas fa-shield-alt fa-2x text-info mb-3"></i>
+                            <h3 class="mb-1" id="complianceFlags">0</h3>
+                            <p class="text-muted">Compliance Flags</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Format Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="formatChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Business Intent Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="intentChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Processor Section -->
+    <section id="processor" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Content Processor</h2>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <!-- Upload Area -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-cloud-upload-alt me-2"></i>Upload & Process
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="upload-area" id="uploadArea">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                <h5>Drag & Drop Files Here</h5>
+                                <p class="text-muted">Or click to select files</p>
+                                <p class="small text-muted">
+                                    Supported formats: PDF, JSON, Email (.eml, .txt)
+                                </p>
+                                <input type="file" id="fileInput" class="d-none" accept=".pdf,.json,.eml,.txt">
+                                <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                                    Select Files
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Input -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-keyboard me-2"></i>Text Input
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="contentType" class="form-label">Content Type</label>
+                                <select class="form-select" id="contentType">
+                                    <option value="auto">Auto-detect</option>
+                                    <option value="email">Email</option>
+                                    <option value="json">JSON</option>
+                                    <option value="text">Plain Text</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="textContent" class="form-label">Content</label>
+                                <textarea class="form-control" id="textContent" rows="8" 
+                                         placeholder="Paste your email, JSON, or text content here..."></textarea>
+                            </div>
+                            <button class="btn btn-success" onclick="processText()">
+                                <i class="fas fa-play me-2"></i>Process Content
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Processing Spinner -->
+                    <div class="card processing-spinner" id="processingSpinner">
+                        <div class="card-body text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Processing...</span>
+                            </div>
+                            <h5 class="mt-3">Processing Content...</h5>
+                            <p class="text-muted">Our AI agents are analyzing your content</p>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="card result-card" id="resultCard">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chart-bar me-2"></i>Processing Results
+                            </h5>
+                        </div>
+                        <div class="card-body" id="resultContent">
+                            <!-- Results will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Sessions -->
+    <section id="analytics" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Recent Processing Sessions</h2>
+            
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Session History</h5>
+                    <button class="btn btn-sm btn-outline-primary" onclick="refreshSessions()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Session ID</th>
+                                    <th>Format</th>
+                                    <th>Intent</th>
+                                    <th>Actions</th>
+                                    <th>Status</th>
+                                    <th>Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sessionsTable">
+                                <!-- Sessions will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p class="mb-0">
+                &copy; 2024 Multi-Format Autonomous AI System. 
+                Built with FastAPI, Redis, and advanced AI agents.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>

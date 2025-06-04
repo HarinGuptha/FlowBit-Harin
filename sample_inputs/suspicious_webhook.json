@@ -1,0 +1,29 @@
+{
+  "event_type": "payment_completed",
+  "timestamp": "2024-01-15T14:30:00Z",
+  "data": {
+    "user_id": "user_12345",
+    "amount": 999999.99,
+    "currency": "USD",
+    "transaction_id": "txn_suspicious_123",
+    "description": "<script>alert('XSS Attack')</script>",
+    "notes": "'; DROP TABLE users; --",
+    "customer_email": "test@example.com",
+    "ip_address": "192.168.1.100",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  },
+  "metadata": {
+    "source": "payment_gateway",
+    "version": "2.1",
+    "suspicious_flags": [
+      "unusual_amount",
+      "potential_xss",
+      "sql_injection_attempt"
+    ]
+  },
+  "risk_indicators": {
+    "amount_anomaly": true,
+    "velocity_check": "failed",
+    "fraud_score": 0.95
+  }
+}

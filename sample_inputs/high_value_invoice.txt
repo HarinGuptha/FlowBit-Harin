@@ -1,0 +1,47 @@
+INVOICE
+
+Invoice Number: INV-2024-15678
+Date: January 15, 2024
+Due Date: February 14, 2024
+
+Bill To:
+Acme Corporation
+John Smith, CFO
+123 Business Ave, Suite 500
+New York, NY 10001
+john.smith@acme.com
+Phone: (212) 555-0123
+
+Ship To:
+Acme Corporation - Data Center
+456 Technology Blvd
+Austin, TX 78701
+
+Line Items:
+1. Enterprise Software License (50 users) - Qty: 1 @ $14,999.50 = $14,999.50
+2. Professional Implementation Services - Qty: 40 hrs @ $250.00 = $10,000.00
+3. Premium Support Package (Annual) - Qty: 1 @ $5,500.00 = $5,500.00
+4. Training and Certification - Qty: 10 users @ $299.99 = $2,999.90
+5. Custom Integration Development - Qty: 20 hrs @ $350.00 = $7,000.00
+
+Subtotal: $40,499.40
+Tax (8.5%): $3,442.45
+Shipping: $157.15
+Total Amount Due: $44,099.00
+
+Payment Terms: Net 30 days
+Payment Methods: Wire Transfer, ACH, Check
+Late Fee: 1.5% per month on overdue amounts
+
+Wire Transfer Instructions:
+Bank: First National Bank
+Account: 123456789
+Routing: 021000021
+Reference: INV-2024-15678
+
+Thank you for your business!
+
+For questions regarding this invoice, please contact:
+Billing Department
+billing@vendor.com
+(800) 555-BILL

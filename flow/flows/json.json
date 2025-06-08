@@ -1,0 +1,281 @@
+{
+  "data": {
+    "nodes": [
+      {
+        "id": "input-1",
+        "type": "customNode",
+        "position": { "x": 100, "y": 100 },
+        "data": {
+          "type": "ChatInput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "JSON Data",
+                "info": "JSON data to validate and analyze",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "User"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "JSON System"
+              }
+            },
+            "description": "JSON data input",
+            "display_name": "JSON Input"
+          }
+        }
+      },
+      {
+        "id": "validator-1",
+        "type": "customNode",
+        "position": { "x": 300, "y": 50 },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "JSON Validator Template",
+                "type": "prompt",
+                "value": "Validate and analyze the following JSON data:\n\nJSON Data:\n{json_data}\n\nPerform comprehensive validation and return analysis:\n{\n  \"is_valid_json\": true/false,\n  \"syntax_errors\": [],\n  \"schema_validation\": {\n    \"has_required_fields\": true/false,\n    \"missing_fields\": [],\n    \"unexpected_fields\": [],\n    \"type_mismatches\": []\n  },\n  \"data_quality\": {\n    \"completeness_score\": 0.0-1.0,\n    \"consistency_score\": 0.0-1.0,\n    \"format_compliance\": true/false\n  },\n  \"detected_schema_type\": \"webhook|transaction|user_event|invoice|unknown\",\n  \"confidence\": 0.0-1.0\n}"
+              },
+              "json_data": {
+                "display_name": "JSON Data",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Validate JSON structure and schema",
+            "display_name": "JSON Validator"
+          }
+        }
+      },
+      {
+        "id": "anomaly-detector-1",
+        "type": "customNode",
+        "position": { "x": 300, "y": 200 },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Anomaly Detector Template",
+                "type": "prompt",
+                "value": "Analyze the following JSON data for anomalies and security threats:\n\nJSON Data:\n{json_data}\n\nDetect anomalies and security issues:\n{\n  \"anomaly_score\": 0.0-1.0,\n  \"anomalies_detected\": [\n    {\n      \"type\": \"unusual_value|missing_field|type_mismatch|suspicious_pattern\",\n      \"field\": \"field_name\",\n      \"description\": \"detailed description\",\n      \"severity\": \"low|medium|high|critical\"\n    }\n  ],\n  \"security_threats\": {\n    \"sql_injection_risk\": true/false,\n    \"xss_risk\": true/false,\n    \"suspicious_patterns\": [],\n    \"malicious_content\": []\n  },\n  \"statistical_anomalies\": {\n    \"unusual_amounts\": [],\n    \"outlier_values\": [],\n    \"frequency_anomalies\": []\n  },\n  \"risk_level\": \"low|medium|high|critical\",\n  \"recommended_actions\": []\n}"
+              },
+              "json_data": {
+                "display_name": "JSON Data",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Detect anomalies and security threats",
+            "display_name": "Anomaly Detector"
+          }
+        }
+      },
+      {
+        "id": "llm-validator",
+        "type": "customNode",
+        "position": { "x": 500, "y": 50 },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-3.5-turbo", "gpt-4"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.1
+              }
+            },
+            "description": "LLM for JSON validation",
+            "display_name": "Validator LLM"
+          }
+        }
+      },
+      {
+        "id": "llm-anomaly",
+        "type": "customNode",
+        "position": { "x": 500, "y": 200 },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-3.5-turbo", "gpt-4"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.2
+              }
+            },
+            "description": "LLM for anomaly detection",
+            "display_name": "Anomaly LLM"
+          }
+        }
+      },
+      {
+        "id": "combiner-1",
+        "type": "customNode",
+        "position": { "x": 700, "y": 125 },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Result Combiner",
+                "type": "prompt",
+                "value": "Combine JSON validation and anomaly detection results:\n\nValidation Results: {validation_results}\nAnomaly Analysis: {anomaly_analysis}\n\nGenerate comprehensive JSON analysis:\n{\n  \"validation_summary\": validation_results,\n  \"anomaly_summary\": anomaly_analysis,\n  \"overall_risk_assessment\": {\n    \"risk_level\": \"low|medium|high|critical\",\n    \"confidence\": 0.0-1.0,\n    \"primary_concerns\": [],\n    \"immediate_actions_required\": true/false\n  },\n  \"recommended_actions\": [\n    {\n      \"action_type\": \"accept|flag|reject|escalate\",\n      \"priority\": \"low|medium|high|critical\",\n      \"reason\": \"explanation\",\n      \"automated_response\": \"suggested automatic action\"\n    }\n  ],\n  \"processing_summary\": \"Brief summary of JSON analysis\"\n}"
+              },
+              "validation_results": {
+                "display_name": "Validation Results",
+                "type": "str",
+                "value": ""
+              },
+              "anomaly_analysis": {
+                "display_name": "Anomaly Analysis",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Combine validation and anomaly results",
+            "display_name": "Result Combiner"
+          }
+        }
+      },
+      {
+        "id": "llm-combiner",
+        "type": "customNode",
+        "position": { "x": 900, "y": 125 },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-3.5-turbo", "gpt-4"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.1
+              }
+            },
+            "description": "LLM for combining results",
+            "display_name": "Combiner LLM"
+          }
+        }
+      },
+      {
+        "id": "output-1",
+        "type": "customNode",
+        "position": { "x": 1100, "y": 125 },
+        "data": {
+          "type": "ChatOutput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "JSON Analysis Result",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "Machine"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "JSON Agent"
+              }
+            },
+            "description": "JSON analysis result",
+            "display_name": "JSON Analysis Output"
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-1",
+        "source": "input-1",
+        "target": "validator-1",
+        "sourceHandle": "output",
+        "targetHandle": "json_data"
+      },
+      {
+        "id": "edge-2",
+        "source": "input-1",
+        "target": "anomaly-detector-1",
+        "sourceHandle": "output",
+        "targetHandle": "json_data"
+      },
+      {
+        "id": "edge-3",
+        "source": "validator-1",
+        "target": "llm-validator",
+        "sourceHandle": "output",
+        "targetHandle": "input"
+      },
+      {
+        "id": "edge-4",
+        "source": "anomaly-detector-1",
+        "target": "llm-anomaly",
+        "sourceHandle": "output",
+        "targetHandle": "input"
+      },
+      {
+        "id": "edge-5",
+        "source": "llm-validator",
+        "target": "combiner-1",
+        "sourceHandle": "output",
+        "targetHandle": "validation_results"
+      },
+      {
+        "id": "edge-6",
+        "source": "llm-anomaly",
+        "target": "combiner-1",
+        "sourceHandle": "output",
+        "targetHandle": "anomaly_analysis"
+      },
+      {
+        "id": "edge-7",
+        "source": "combiner-1",
+        "target": "llm-combiner",
+        "sourceHandle": "output",
+        "targetHandle": "input"
+      },
+      {
+        "id": "edge-8",
+        "source": "llm-combiner",
+        "target": "output-1",
+        "sourceHandle": "output",
+        "targetHandle": "input_value"
+      }
+    ]
+  },
+  "description": "Advanced JSON validation and anomaly detection agent",
+  "name": "JSON Agent",
+  "last_tested_version": "1.0.0",
+  "endpoint_name": "json"
+}

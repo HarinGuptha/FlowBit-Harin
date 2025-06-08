@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # Redis for LangFlow
+  redis:
+    image: redis:7-alpine
+    container_name: flowbit_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - flowbit_network
+
+  # LangFlow
+  langflow:
+    image: langflowai/langflow:latest
+    container_name: flowbit_langflow
+    ports:
+      - "7860:7860"
+    environment:
+      - LANGFLOW_DATABASE_URL=sqlite:///./langflow.db
+      - LANGFLOW_REDIS_URL=redis://redis:6379
+      - LANGFLOW_DEFAULT_FLOWS_PATH=/app/flows
+      - LANGFLOW_AUTO_LOGIN=true
+      - LANGFLOW_SUPERUSER=admin
+      - LANGFLOW_SUPERUSER_PASSWORD=admin123
+      - LANGFLOW_SECRET_KEY=flowbit-secret-key-2024
+      - LANGFLOW_LOG_LEVEL=INFO
+    volumes:
+      - ./flows:/app/flows
+      - langflow_data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - flowbit_network
+    restart: unless-stopped
+
+  # FlowBit Frontend (Next.js)
+  flowbit:
+    build: .
+    container_name: flowbit_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_LANGFLOW_URL=http://localhost:7860
+      - LANGFLOW_BASE_URL=http://langflow:7860
+      - LANGFLOW_API_KEY=admin123
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      langflow:
+        condition: service_healthy
+    networks:
+      - flowbit_network
+    restart: unless-stopped
+    profiles:
+      - production
+
+volumes:
+  redis_data:
+    driver: local
+  langflow_data:
+    driver: local
+
+networks:
+  flowbit_network:
+    driver: bridge

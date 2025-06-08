@@ -1,0 +1,52 @@
+[
+  {
+    "workflowId": "wf-5",
+    "engine": "langflow",
+    "schedule": "0 9 * * 1-5",
+    "inputPayload": {},
+    "description": "Run every weekday at 9 AM",
+    "enabled": true,
+    "id": "job_1749232880758_bdijvip7q",
+    "createdAt": "2025-06-06T18:01:20.758Z",
+    "nextRun": "2025-06-08T15:26:51.439Z"
+  },
+  {
+    "workflowId": "json",
+    "engine": "langflow",
+    "schedule": "0 */6 * * *",
+    "inputPayload": {
+      "content": "{\"event\": \"scheduled_check\", \"timestamp\": \"1749233898\"}"
+    },
+    "description": "Automated JSON validation every 6 hours",
+    "enabled": true,
+    "id": "job_1749233898513_qjs73j0ux",
+    "createdAt": "2025-06-06T18:18:18.513Z",
+    "nextRun": "2025-06-08T15:26:51.446Z"
+  },
+  {
+    "workflowId": "json",
+    "engine": "langflow",
+    "schedule": "0 */6 * * *",
+    "inputPayload": {
+      "content": "{\"event\": \"scheduled_check\", \"timestamp\": \"1749394778\"}"
+    },
+    "description": "Automated JSON validation every 6 hours",
+    "enabled": true,
+    "id": "job_1749394778606_0w8owimje",
+    "createdAt": "2025-06-08T14:59:38.606Z",
+    "nextRun": "2025-06-08T15:26:51.449Z"
+  },
+  {
+    "workflowId": "json",
+    "engine": "langflow",
+    "schedule": "0 */6 * * *",
+    "inputPayload": {
+      "content": "{\"event\": \"scheduled_check\", \"timestamp\": \"1749396351\"}"
+    },
+    "description": "Automated JSON validation every 6 hours",
+    "enabled": true,
+    "id": "job_1749396351972_xxxqqgr4p",
+    "createdAt": "2025-06-08T15:25:51.972Z",
+    "nextRun": "2025-06-08T15:26:51.973Z"
+  }
+]

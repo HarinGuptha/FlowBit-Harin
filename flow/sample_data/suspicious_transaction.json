@@ -1,0 +1,30 @@
+{
+  "event_type": "payment_processed",
+  "transaction_id": "TXN_999888777",
+  "timestamp": "2025-01-06T14:35:22Z",
+  "amount": 99999.99,
+  "currency": "USD",
+  "user_id": "user_suspicious_123",
+  "payment_method": {
+    "type": "credit_card",
+    "last_four": "1234",
+    "country": "Unknown"
+  },
+  "merchant": {
+    "id": "MERCH_001",
+    "name": "Electronics Store",
+    "category": "electronics"
+  },
+  "risk_indicators": {
+    "first_time_user": true,
+    "high_amount": true,
+    "unusual_time": "02:30 AM",
+    "ip_location": "TOR_EXIT_NODE",
+    "velocity_check": "FAILED"
+  },
+  "metadata": {
+    "user_agent": "curl/7.68.0",
+    "session_id": "sess_anonymous_999",
+    "referrer": null
+  }
+}

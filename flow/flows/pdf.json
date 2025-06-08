@@ -1,0 +1,356 @@
+{
+  "data": {
+    "nodes": [
+      {
+        "id": "input-1",
+        "type": "customNode",
+        "position": { "x": 100, "y": 100 },
+        "data": {
+          "type": "ChatInput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "PDF Content",
+                "info": "Extracted PDF text content to analyze",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "User"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "PDF System"
+              }
+            },
+            "description": "PDF content input",
+            "display_name": "PDF Input"
+          }
+        }
+      },
+      {
+        "id": "classifier-1",
+        "type": "customNode",
+        "position": { "x": 300, "y": 50 },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Document Classifier Template",
+                "type": "prompt",
+                "value": "Classify the following PDF document content:\n\nPDF Content:\n{pdf_content}\n\nClassify document type and extract metadata:\n{\n  \"document_type\": \"invoice|contract|policy|report|manual|legal|financial|other\",\n  \"confidence\": 0.0-1.0,\n  \"document_metadata\": {\n    \"title\": \"extracted title\",\n    \"date\": \"document date if found\",\n    \"author\": \"author if found\",\n    \"organization\": \"organization if found\",\n    \"document_id\": \"document ID if found\"\n  },\n  \"content_structure\": {\n    \"has_tables\": true/false,\n    \"has_signatures\": true/false,\n    \"has_financial_data\": true/false,\n    \"page_count_estimate\": number,\n    \"sections_identified\": []\n  },\n  \"classification_reasoning\": \"explanation of classification\"\n}"
+              },
+              "pdf_content": {
+                "display_name": "PDF Content",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Classify PDF document type",
+            "display_name": "Document Classifier"
+          }
+        }
+      },
+      {
+        "id": "extractor-1",
+        "type": "customNode",
+        "position": { "x": 300, "y": 200 },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Data Extractor Template",
+                "type": "prompt",
+                "value": "Extract structured data from the following PDF content:\n\nPDF Content:\n{pdf_content}\n\nExtract relevant data based on document type:\n{\n  \"extracted_data\": {\n    \"financial_information\": {\n      \"amounts\": [],\n      \"currencies\": [],\n      \"totals\": [],\n      \"line_items\": []\n    },\n    \"dates\": [],\n    \"entities\": {\n      \"people\": [],\n      \"organizations\": [],\n      \"locations\": []\n    },\n    \"contact_information\": {\n      \"emails\": [],\n      \"phone_numbers\": [],\n      \"addresses\": []\n    },\n    \"identifiers\": {\n      \"invoice_numbers\": [],\n      \"contract_numbers\": [],\n      \"reference_numbers\": []\n    }\n  },\n  \"key_sections\": {\n    \"summary\": \"brief summary\",\n    \"important_clauses\": [],\n    \"action_items\": [],\n    \"deadlines\": []\n  }\n}"
+              },
+              "pdf_content": {
+                "display_name": "PDF Content",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Extract structured data from PDF",
+            "display_name": "Data Extractor"
+          }
+        }
+      },
+      {
+        "id": "compliance-checker-1",
+        "type": "customNode",
+        "position": { "x": 300, "y": 350 },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Compliance Checker Template",
+                "type": "prompt",
+                "value": "Analyze the following PDF content for compliance and regulatory requirements:\n\nPDF Content:\n{pdf_content}\n\nCheck for compliance indicators:\n{\n  \"compliance_flags\": {\n    \"gdpr_related\": true/false,\n    \"hipaa_related\": true/false,\n    \"sox_related\": true/false,\n    \"fda_related\": true/false,\n    \"financial_regulation\": true/false,\n    \"data_protection\": true/false\n  },\n  \"detected_regulations\": [],\n  \"compliance_keywords\": [],\n  \"risk_indicators\": {\n    \"high_value_transaction\": true/false,\n    \"sensitive_data\": true/false,\n    \"regulatory_deadline\": true/false,\n    \"audit_requirement\": true/false\n  },\n  \"required_actions\": [\n    {\n      \"action_type\": \"review|approve|escalate|archive\",\n      \"urgency\": \"low|medium|high|critical\",\n      \"reason\": \"compliance requirement\",\n      \"deadline\": \"if applicable\"\n    }\n  ],\n  \"compliance_score\": 0.0-1.0\n}"
+              },
+              "pdf_content": {
+                "display_name": "PDF Content",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Check compliance requirements",
+            "display_name": "Compliance Checker"
+          }
+        }
+      },
+      {
+        "id": "llm-classifier",
+        "type": "customNode",
+        "position": { "x": 500, "y": 50 },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-3.5-turbo", "gpt-4"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.1
+              }
+            },
+            "description": "LLM for document classification",
+            "display_name": "Classifier LLM"
+          }
+        }
+      },
+      {
+        "id": "llm-extractor",
+        "type": "customNode",
+        "position": { "x": 500, "y": 200 },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-3.5-turbo", "gpt-4"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.1
+              }
+            },
+            "description": "LLM for data extraction",
+            "display_name": "Extractor LLM"
+          }
+        }
+      },
+      {
+        "id": "llm-compliance",
+        "type": "customNode",
+        "position": { "x": 500, "y": 350 },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-3.5-turbo", "gpt-4"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.1
+              }
+            },
+            "description": "LLM for compliance checking",
+            "display_name": "Compliance LLM"
+          }
+        }
+      },
+      {
+        "id": "combiner-1",
+        "type": "customNode",
+        "position": { "x": 700, "y": 200 },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Result Combiner",
+                "type": "prompt",
+                "value": "Combine PDF analysis results:\n\nClassification: {classification_results}\nExtracted Data: {extraction_results}\nCompliance Analysis: {compliance_results}\n\nGenerate comprehensive PDF analysis:\n{\n  \"document_analysis\": classification_results,\n  \"extracted_information\": extraction_results,\n  \"compliance_assessment\": compliance_results,\n  \"overall_assessment\": {\n    \"processing_confidence\": 0.0-1.0,\n    \"data_quality\": \"high|medium|low\",\n    \"completeness\": 0.0-1.0,\n    \"actionable_insights\": []\n  },\n  \"recommended_actions\": [\n    {\n      \"action_type\": \"process|review|escalate|archive\",\n      \"priority\": \"low|medium|high|critical\",\n      \"reason\": \"explanation\",\n      \"automated_processing\": true/false\n    }\n  ],\n  \"processing_summary\": \"Brief summary of PDF analysis\"\n}"
+              },
+              "classification_results": {
+                "display_name": "Classification Results",
+                "type": "str",
+                "value": ""
+              },
+              "extraction_results": {
+                "display_name": "Extraction Results",
+                "type": "str",
+                "value": ""
+              },
+              "compliance_results": {
+                "display_name": "Compliance Results",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Combine all PDF analysis results",
+            "display_name": "Result Combiner"
+          }
+        }
+      },
+      {
+        "id": "llm-combiner",
+        "type": "customNode",
+        "position": { "x": 900, "y": 200 },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-3.5-turbo", "gpt-4"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.1
+              }
+            },
+            "description": "LLM for combining results",
+            "display_name": "Combiner LLM"
+          }
+        }
+      },
+      {
+        "id": "output-1",
+        "type": "customNode",
+        "position": { "x": 1100, "y": 200 },
+        "data": {
+          "type": "ChatOutput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "PDF Analysis Result",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "Machine"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "PDF Agent"
+              }
+            },
+            "description": "PDF analysis result",
+            "display_name": "PDF Analysis Output"
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-1",
+        "source": "input-1",
+        "target": "classifier-1",
+        "sourceHandle": "output",
+        "targetHandle": "pdf_content"
+      },
+      {
+        "id": "edge-2",
+        "source": "input-1",
+        "target": "extractor-1",
+        "sourceHandle": "output",
+        "targetHandle": "pdf_content"
+      },
+      {
+        "id": "edge-3",
+        "source": "input-1",
+        "target": "compliance-checker-1",
+        "sourceHandle": "output",
+        "targetHandle": "pdf_content"
+      },
+      {
+        "id": "edge-4",
+        "source": "classifier-1",
+        "target": "llm-classifier",
+        "sourceHandle": "output",
+        "targetHandle": "input"
+      },
+      {
+        "id": "edge-5",
+        "source": "extractor-1",
+        "target": "llm-extractor",
+        "sourceHandle": "output",
+        "targetHandle": "input"
+      },
+      {
+        "id": "edge-6",
+        "source": "compliance-checker-1",
+        "target": "llm-compliance",
+        "sourceHandle": "output",
+        "targetHandle": "input"
+      },
+      {
+        "id": "edge-7",
+        "source": "llm-classifier",
+        "target": "combiner-1",
+        "sourceHandle": "output",
+        "targetHandle": "classification_results"
+      },
+      {
+        "id": "edge-8",
+        "source": "llm-extractor",
+        "target": "combiner-1",
+        "sourceHandle": "output",
+        "targetHandle": "extraction_results"
+      },
+      {
+        "id": "edge-9",
+        "source": "llm-compliance",
+        "target": "combiner-1",
+        "sourceHandle": "output",
+        "targetHandle": "compliance_results"
+      },
+      {
+        "id": "edge-10",
+        "source": "combiner-1",
+        "target": "llm-combiner",
+        "sourceHandle": "output",
+        "targetHandle": "input"
+      },
+      {
+        "id": "edge-11",
+        "source": "llm-combiner",
+        "target": "output-1",
+        "sourceHandle": "output",
+        "targetHandle": "input_value"
+      }
+    ]
+  },
+  "description": "Advanced PDF processing agent with document classification, data extraction, and compliance checking",
+  "name": "PDF Agent",
+  "last_tested_version": "1.0.0",
+  "endpoint_name": "pdf"
+}

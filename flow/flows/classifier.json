@@ -1,0 +1,173 @@
+{
+  "data": {
+    "nodes": [
+      {
+        "id": "input-1",
+        "type": "customNode",
+        "position": { "x": 100, "y": 100 },
+        "data": {
+          "type": "ChatInput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "Text",
+                "info": "Message to be passed as input.",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "User"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "info": "Name of the sender.",
+                "type": "str",
+                "value": "User"
+              },
+              "session_id": {
+                "display_name": "Session ID",
+                "info": "Session ID for the chat.",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Input for content classification",
+            "display_name": "Content Input"
+          }
+        }
+      },
+      {
+        "id": "prompt-1",
+        "type": "customNode",
+        "position": { "x": 300, "y": 100 },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Template",
+                "info": "Template for the prompt.",
+                "type": "prompt",
+                "value": "You are an advanced content classifier agent. Analyze the following content and classify it:\n\n1. FORMAT TYPE: Determine if this is:\n   - email (contains From:, To:, Subject: headers)\n   - json (structured JSON data)\n   - pdf (document text content)\n   - text (plain text)\n\n2. BUSINESS INTENT: Classify the intent as:\n   - complaint (angry, disappointed, frustrated tone)\n   - rfq (request for quote, pricing inquiry)\n   - invoice (billing, payment, amount due)\n   - regulation (compliance, policy, GDPR, legal)\n   - fraud_risk (suspicious patterns, high amounts)\n   - general (other content)\n\n3. CONFIDENCE SCORE: Provide a confidence score (0.0 to 1.0)\n\nContent to analyze:\n{content}\n\nRespond in JSON format:\n{\n  \"format_type\": \"email|json|pdf|text\",\n  \"business_intent\": \"complaint|rfq|invoice|regulation|fraud_risk|general\",\n  \"confidence\": 0.95,\n  \"reasoning\": \"Brief explanation of classification\",\n  \"metadata\": {\n    \"detected_patterns\": [],\n    \"key_indicators\": []\n  }\n}"
+              },
+              "content": {
+                "display_name": "Content",
+                "info": "Content to classify",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Classification prompt template",
+            "display_name": "Classifier Prompt"
+          }
+        }
+      },
+      {
+        "id": "llm-1",
+        "type": "customNode",
+        "position": { "x": 500, "y": 100 },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "api_key": {
+                "display_name": "OpenAI API Key",
+                "info": "Your OpenAI API key",
+                "type": "str",
+                "value": ""
+              },
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-3.5-turbo", "gpt-4", "gpt-4-turbo"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "info": "Controls randomness in output",
+                "type": "float",
+                "value": 0.1
+              },
+              "max_tokens": {
+                "display_name": "Max Tokens",
+                "info": "Maximum tokens in response",
+                "type": "int",
+                "value": 1000
+              }
+            },
+            "description": "OpenAI model for classification",
+            "display_name": "Classification LLM"
+          }
+        }
+      },
+      {
+        "id": "output-1",
+        "type": "customNode",
+        "position": { "x": 700, "y": 100 },
+        "data": {
+          "type": "ChatOutput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "Text",
+                "info": "Message to be passed as output.",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "Machine"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "info": "Name of the sender.",
+                "type": "str",
+                "value": "Classifier Agent"
+              },
+              "session_id": {
+                "display_name": "Session ID",
+                "info": "Session ID for the chat.",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Classification result output",
+            "display_name": "Classification Result"
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-1",
+        "source": "input-1",
+        "target": "prompt-1",
+        "sourceHandle": "output",
+        "targetHandle": "content"
+      },
+      {
+        "id": "edge-2",
+        "source": "prompt-1",
+        "target": "llm-1",
+        "sourceHandle": "output",
+        "targetHandle": "input"
+      },
+      {
+        "id": "edge-3",
+        "source": "llm-1",
+        "target": "output-1",
+        "sourceHandle": "output",
+        "targetHandle": "input_value"
+      }
+    ]
+  },
+  "description": "Advanced content classifier that determines format type and business intent",
+  "name": "Classifier Agent",
+  "last_tested_version": "1.0.0",
+  "endpoint_name": "classifier"
+}

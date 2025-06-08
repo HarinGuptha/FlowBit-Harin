@@ -1,0 +1,281 @@
+{
+  "data": {
+    "nodes": [
+      {
+        "id": "input-1",
+        "type": "customNode",
+        "position": { "x": 100, "y": 100 },
+        "data": {
+          "type": "ChatInput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "Email Content",
+                "info": "Raw email content to analyze",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "User"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "Email System"
+              }
+            },
+            "description": "Email content input",
+            "display_name": "Email Input"
+          }
+        }
+      },
+      {
+        "id": "parser-1",
+        "type": "customNode",
+        "position": { "x": 300, "y": 50 },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Email Parser Template",
+                "type": "prompt",
+                "value": "Parse the following email and extract structured information:\n\nEmail Content:\n{email_content}\n\nExtract and return JSON with:\n{\n  \"sender\": \"email address\",\n  \"recipient\": \"email address\",\n  \"subject\": \"subject line\",\n  \"date\": \"date if available\",\n  \"body\": \"email body text\",\n  \"extracted_entities\": {\n    \"emails\": [],\n    \"phone_numbers\": [],\n    \"order_ids\": [],\n    \"amounts\": []\n  }\n}"
+              },
+              "email_content": {
+                "display_name": "Email Content",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Parse email structure",
+            "display_name": "Email Parser"
+          }
+        }
+      },
+      {
+        "id": "analyzer-1",
+        "type": "customNode",
+        "position": { "x": 300, "y": 200 },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Tone Analyzer Template",
+                "type": "prompt",
+                "value": "Analyze the tone and sentiment of this email content:\n\n{email_content}\n\nProvide analysis in JSON format:\n{\n  \"tone\": \"polite|neutral|concerned|angry|threatening|urgent\",\n  \"sentiment_score\": -1.0 to 1.0,\n  \"urgency_level\": \"low|medium|high|critical\",\n  \"escalation_required\": true/false,\n  \"escalation_reason\": \"reason if escalation needed\",\n  \"key_phrases\": [\"important phrases that indicate tone\"],\n  \"emotional_indicators\": [\"words/phrases showing emotion\"],\n  \"threat_indicators\": [\"any threatening language\"],\n  \"urgency_indicators\": [\"words showing urgency\"]\n}"
+              },
+              "email_content": {
+                "display_name": "Email Content",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Analyze email tone and sentiment",
+            "display_name": "Tone Analyzer"
+          }
+        }
+      },
+      {
+        "id": "llm-parser",
+        "type": "customNode",
+        "position": { "x": 500, "y": 50 },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-3.5-turbo", "gpt-4"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.1
+              }
+            },
+            "description": "LLM for email parsing",
+            "display_name": "Parser LLM"
+          }
+        }
+      },
+      {
+        "id": "llm-analyzer",
+        "type": "customNode",
+        "position": { "x": 500, "y": 200 },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-3.5-turbo", "gpt-4"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.2
+              }
+            },
+            "description": "LLM for tone analysis",
+            "display_name": "Analyzer LLM"
+          }
+        }
+      },
+      {
+        "id": "combiner-1",
+        "type": "customNode",
+        "position": { "x": 700, "y": 125 },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Result Combiner",
+                "type": "prompt",
+                "value": "Combine email parsing and analysis results:\n\nParsed Data: {parsed_data}\nTone Analysis: {tone_analysis}\n\nGenerate final email processing result:\n{\n  \"email_data\": parsed_data,\n  \"analysis\": tone_analysis,\n  \"recommended_actions\": [\n    {\n      \"action_type\": \"escalate|log_and_close|follow_up\",\n      \"priority\": \"low|medium|high|critical\",\n      \"reason\": \"explanation\",\n      \"suggested_response_time\": \"immediate|1hour|24hours|3days\"\n    }\n  ],\n  \"processing_summary\": \"Brief summary of email processing\"\n}"
+              },
+              "parsed_data": {
+                "display_name": "Parsed Data",
+                "type": "str",
+                "value": ""
+              },
+              "tone_analysis": {
+                "display_name": "Tone Analysis",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Combine parsing and analysis results",
+            "display_name": "Result Combiner"
+          }
+        }
+      },
+      {
+        "id": "llm-combiner",
+        "type": "customNode",
+        "position": { "x": 900, "y": 125 },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-3.5-turbo", "gpt-4"],
+                "type": "str",
+                "value": "gpt-3.5-turbo"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.1
+              }
+            },
+            "description": "LLM for combining results",
+            "display_name": "Combiner LLM"
+          }
+        }
+      },
+      {
+        "id": "output-1",
+        "type": "customNode",
+        "position": { "x": 1100, "y": 125 },
+        "data": {
+          "type": "ChatOutput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "Email Analysis Result",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "Machine"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "Email Agent"
+              }
+            },
+            "description": "Email processing result",
+            "display_name": "Email Analysis Output"
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-1",
+        "source": "input-1",
+        "target": "parser-1",
+        "sourceHandle": "output",
+        "targetHandle": "email_content"
+      },
+      {
+        "id": "edge-2",
+        "source": "input-1",
+        "target": "analyzer-1",
+        "sourceHandle": "output",
+        "targetHandle": "email_content"
+      },
+      {
+        "id": "edge-3",
+        "source": "parser-1",
+        "target": "llm-parser",
+        "sourceHandle": "output",
+        "targetHandle": "input"
+      },
+      {
+        "id": "edge-4",
+        "source": "analyzer-1",
+        "target": "llm-analyzer",
+        "sourceHandle": "output",
+        "targetHandle": "input"
+      },
+      {
+        "id": "edge-5",
+        "source": "llm-parser",
+        "target": "combiner-1",
+        "sourceHandle": "output",
+        "targetHandle": "parsed_data"
+      },
+      {
+        "id": "edge-6",
+        "source": "llm-analyzer",
+        "target": "combiner-1",
+        "sourceHandle": "output",
+        "targetHandle": "tone_analysis"
+      },
+      {
+        "id": "edge-7",
+        "source": "combiner-1",
+        "target": "llm-combiner",
+        "sourceHandle": "output",
+        "targetHandle": "input"
+      },
+      {
+        "id": "edge-8",
+        "source": "llm-combiner",
+        "target": "output-1",
+        "sourceHandle": "output",
+        "targetHandle": "input_value"
+      }
+    ]
+  },
+  "description": "Advanced email processing agent with tone analysis and escalation logic",
+  "name": "Email Agent",
+  "last_tested_version": "1.0.0",
+  "endpoint_name": "email"
+}
